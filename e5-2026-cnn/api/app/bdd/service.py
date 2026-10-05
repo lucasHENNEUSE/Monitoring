@@ -1,15 +1,15 @@
 from app.bdd.connexion import Connexion
 from app.bdd.prediction import Prediction
 
-
 class Service_Prediction(Connexion):
     @classmethod
     def sauvegarder_prediction(cls, prediction: Prediction):
         with cls.ouvrir_connexion() as (bdd, cursor):
+            
             cursor.execute("SELECT id FROM labels")
             labels = cursor.fetchall()
 
-            if labels is None:
+            if not labels:
                 raise ValueError(f"Label absent de la base : {prediction.label}")
             
             cursor.execute(
@@ -24,11 +24,14 @@ class Service_Prediction(Connexion):
     @classmethod
     def lister_predictions(cls):
         with cls.ouvrir_connexion() as (_, cursor):
+            # Ajout de 'predictions.id as id' dans le SELECT
             cursor.execute(
-                "SELECT predictions.image as image, labels.label as label, predictions.commentaire as commentaire, predictions.modele as modele FROM predictions JOIN labels ON predictions.label = labels.id"
+                "SELECT predictions.id as id, predictions.image as image, labels.label as label, "
+                "predictions.commentaire as commentaire, predictions.modele as modele "
+                "FROM predictions JOIN labels ON predictions.label = labels.id"
             )
 
             rows = cursor.fetchall()
-            length = len(rows) - 1
-
-            return [Prediction(**row) for row in rows[:length]]
+            
+            # Retourne toutes les prédictions sans ignorer la dernière
+            return [Prediction(**row) for row in rows]
