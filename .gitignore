@@ -1,0 +1,6 @@
+.venv
+.enve5-2026-cnn/databases/
+__pycache__/
+**/databases/
+databases/
+e5-2026-cnn/databases/

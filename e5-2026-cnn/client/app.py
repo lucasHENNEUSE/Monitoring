@@ -15,7 +15,7 @@ menu = st.sidebar.radio("Navigation", ["📤 Upload d'image", "📋 Voir les pr�
 
 # Télécharger les prédictions indépendamment de la page affichée.
 try:
-    pourfichier = requests.post(API_PREDICTIONS_URL, timeout=(5, 30))
+    pourfichier = requests.get(API_PREDICTIONS_URL, timeout=(5, 30))
     pourfichier.raise_for_status()
     predictionsjson = pourfichier.json()
     st.sidebar.download_button(
