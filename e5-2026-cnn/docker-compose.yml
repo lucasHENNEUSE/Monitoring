@@ -61,3 +61,13 @@ services:
     depends_on:
       - web
     restart: always
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: monitoring_metabase
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
